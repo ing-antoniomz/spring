@@ -1,10 +1,11 @@
 package com.spring.backend.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
-
+import com.spring.backend.backend.dto.LoginRequest;
 import com.spring.backend.backend.service.UserService;
 
 import java.util.Map;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,11 +18,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-
-        String token = userService.login(username, password);
+    public Map<String, String> login(@Valid @RequestBody LoginRequest loginRequest) {
+        String token = userService.login(loginRequest.getUser(), loginRequest.getPassword());
         if (token != null) {
             return Map.of("access_token", token);
         } else {
